@@ -6,6 +6,6 @@ defmodule Game.Board.Cell do
   typedstruct enforce: true do
     field :row, 0..8
     field :column, 0..8
-    field :occupier, :black | :white | nil, default: nil
+    field :occupier, :black | :white | nil, enforce: false, default: nil
   end
 end
