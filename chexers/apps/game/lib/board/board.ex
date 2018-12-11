@@ -1,19 +1,10 @@
 defmodule Game.Board do
-  use TypedStruct
   alias Game.Board.Cell
-  alias Game.Board
 
-  typedstruct do
-    field :cells, list(Cell), default: []
-    field :white_pieces, non_neg_integer, default: 12
-    field :black_pieces, non_neg_integer, default: 12
-  end
-
-  @spec create() :: Game.Board.t()
+  @spec create() :: list(Cell)
   def create() do
     []
     |> create_cells(11, 11)
-    |> (&(%Board{ cells: &1 })).()
   end
 
   defp create_row(cells, _row, -1) do
