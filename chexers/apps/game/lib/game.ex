@@ -43,10 +43,11 @@ defmodule Game do
       _ -> %Game{ game | status: :in_progress }
     end
   end
-  
+
   ## Helpers
 
   # Adds player pieces to board asynchronously
+  # Plan on consolidating and cleaning in the near future
   defp initialize(board) do
     board = board
     |> Enum.chunk_by(fn %Cell{row: row} -> row end)
