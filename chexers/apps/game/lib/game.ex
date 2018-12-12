@@ -4,6 +4,8 @@ defmodule Game do
 
   use TypedStruct
 
+  @type coords :: %{ row: integer, col: integer }
+
   typedstruct do
     field :board, list(Cell)
     field :white_pieces, non_neg_integer, default: 12
@@ -20,28 +22,17 @@ defmodule Game do
   end
 
   # Guard to ensure that game is not altered once it has already been won
-  def move(_player, game = %Game{status: :won}) do
+  @spec move(Game.t(), atom(), coords(), coords()) :: Game.t()
+  def move(game = %Game{status: :won}, _player, _from, _to) do
     game
   end
 
-  def move(player, game = %Game{}) do
+  def move(game = %Game{}, player, from, to) do
     game
-    |> move_piece(player)
+    |> check_valid_move(from, to)
+    |> move_piece(player, from, to)
+    |> update_game()
     |> determine_game_status()
-  end
-
-  defp move_piece(game, player) do
-    game
-  end
-
-  # I was torn on whether to pattern match or use cases, but I went with the
-  # latter since I think it leads to clean, more concise code
-  defp determine_game_status(game) do
-    case game do
-      %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, status: :won}
-      %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, status: :won}
-      _ -> %Game{ game | status: :in_progress }
-    end
   end
 
   ## Helpers
@@ -81,4 +72,34 @@ defmodule Game do
   defp place_piece(cell = %Cell{}, piece) do
     %Cell{cell | occupier: piece}
   end
+
+    defp check_valid_move(game, from, to) do
+    case Map.equal?(from, to) do
+      false -> %Game{ game | status: :invalid_move }
+      true -> game
+    end
+  end
+
+  defp move_piece(game = %Game{ status: :invalid_move }, _player, _from, _to) do
+    game
+  end
+
+  defp move_piece(game, player, from, to) do
+    game
+  end
+
+  defp update_game(game) do
+    
+  end
+
+  # I was torn on whether to pattern match or use cases, but I went with the
+  # latter since I think it leads to clean, more concise code
+  defp determine_game_status(game) do
+    case game do
+      %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, status: :won }
+      %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, status: :won }
+      _ -> game
+    end
+  end
+
 end
