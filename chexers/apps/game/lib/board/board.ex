@@ -4,7 +4,7 @@ defmodule Game.Board do
   @spec create(integer()) :: list(Cell)
   def create(size \\ 8) do
     0..size-1
-    |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size) end) end)
+    |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size-1) end) end)
     |> Enum.map(fn task -> Task.await(task) end)
     |> List.flatten
   end
@@ -18,7 +18,7 @@ defmodule Game.Board do
     |> create_row(row, col-1)
   end
 
-  def movable?(row, col) do
+  defp movable?(row, col) do
     case {rem(row, 2), rem(col, 2)} do
       {same, same} -> true
       {_, _} -> false
