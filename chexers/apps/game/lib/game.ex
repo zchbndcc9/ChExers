@@ -11,7 +11,8 @@ defmodule Game do
     field :white_pieces, non_neg_integer, default: 12
     field :black_pieces, non_neg_integer, default: 12
     field :winner, :white | :black | nil, default: nil
-    field :status, atom(), default: :initializing
+    field :game_status, atom(), default: :initializing
+    field :move_status, atom(), default: nil
     field :current_turn, :white | :black | nil, default: nil
   end
 
@@ -29,7 +30,7 @@ defmodule Game do
 
   def move(game = %Game{}, player, from, to) do
     game
-    |> check_valid_move(from, to)
+    |> determine_valid_move(from, to)
     |> move_piece(player, from, to)
     |> update_game()
     |> determine_game_status()
@@ -73,14 +74,21 @@ defmodule Game do
     %Cell{cell | occupier: piece}
   end
 
-    defp check_valid_move(game, from, to) do
+  defp determine_valid_move(game, from, to) do
+    game
+    |> check_same_location(from, to)
+    |> check_distance(from, to)
+    |> check_occupied(to)
+  end
+
+  defp check_same_location(game, from, to)
     case Map.equal?(from, to) do
-      false -> %Game{ game | status: :invalid_move }
+      false -> %Game{ game | move_status: :invalid }
       true -> game
     end
   end
 
-  defp move_piece(game = %Game{ status: :invalid_move }, _player, _from, _to) do
+  defp move_piece(game = %Game{ move_status: :invalid }, _player, _from, _to) do
     game
   end
 
@@ -89,7 +97,7 @@ defmodule Game do
   end
 
   defp update_game(game) do
-    
+
   end
 
   # I was torn on whether to pattern match or use cases, but I went with the
