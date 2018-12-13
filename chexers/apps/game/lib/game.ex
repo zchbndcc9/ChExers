@@ -17,14 +17,16 @@ defmodule Game do
   end
 
   def new_game() do
-    board = Board.create() |> initialize()
+    board =
+      Board.create()
+      |> initialize()
 
     %Game{ board: board }
   end
 
   # Guard to ensure that game is not altered once it has already been won
   @spec move(Game.t(), atom(), coords(), coords()) :: Game.t()
-  def move(game = %Game{status: :won}, _player, _from, _to) do
+  def move(game = %Game{game_status: :won}, _player, _from, _to) do
     game
   end
 
@@ -81,11 +83,19 @@ defmodule Game do
     |> check_occupied(to)
   end
 
-  defp check_same_location(game, from, to)
+  defp check_same_location(game, from, to) do
     case Map.equal?(from, to) do
       false -> %Game{ game | move_status: :invalid }
       true -> game
     end
+  end
+
+  defp check_distance(game, from, to) do
+    game
+  end
+
+  defp check_occupied(game, to) do
+    game
   end
 
   defp move_piece(game = %Game{ move_status: :invalid }, _player, _from, _to) do
@@ -97,17 +107,16 @@ defmodule Game do
   end
 
   defp update_game(game) do
-
+    game
   end
 
   # I was torn on whether to pattern match or use cases, but I went with the
   # latter since I think it leads to clean, more concise code
   defp determine_game_status(game) do
     case game do
-      %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, status: :won }
-      %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, status: :won }
+      %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, game_status: :won }
+      %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, game_status: :won }
       _ -> game
     end
   end
-
 end
