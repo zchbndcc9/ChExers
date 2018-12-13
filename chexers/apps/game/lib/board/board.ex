@@ -1,13 +1,29 @@
 defmodule Game.Board do
   alias Game.Board.Cell
 
-  @spec create(integer()) :: list(Cell)
-  def create(size \\ 8) do
-    0..size-1
-    |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size-1) end) end)
-    |> Enum.map(fn task -> Task.await(task) end)
-    |> List.flatten
+  # Macro used in order to secure board creation function while keeping the
+  # guard nice and concise.
+  defmacro is_valid_size(size) do
+    quote do
+      is_integer(unquote(size)) and unquote(size) > 0
+    end
   end
+
+  @spec create(integer()) :: list(Cell)
+  def create(size \\ 8)
+  def create(size) when is_valid_size(size) do
+    board =
+      0..size-1
+      |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size-1) end) end)
+      |> Enum.map(fn task -> Task.await(task) end)
+      |> List.flatten
+    {:ok, board}
+  end
+
+  def create(_) do
+    {:error, "Must supply a positive integer for size"}
+  end
+
 
   defp create_row(cells, _row, -1) do
     cells
