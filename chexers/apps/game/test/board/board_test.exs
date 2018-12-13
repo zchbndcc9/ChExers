@@ -3,7 +3,7 @@ defmodule Game.BoardTest do
   alias Game.Board
 
   setup_all do
-    board = Board.create()
+    {:ok, board} = Board.create()
     {:ok, board: board}
   end
   describe "when default board is created," do
@@ -23,7 +23,7 @@ defmodule Game.BoardTest do
 
   describe "when dimension is supplied to board," do
     setup do
-      board = Board.create(10)
+      {:ok, board} = Board.create(10)
       {:ok, board: board}
     end
     test "the size is correct", context do
@@ -40,23 +40,38 @@ defmodule Game.BoardTest do
     end
   end
 
-  test "board not created when invalid size is supplied" do
-    assert_raise ArgumentError, fn -> Board.create("hello") end
-    assert_raise ArgumentError, fn -> Board.create(-4) end
-  end
+  describe "board not created when" do
+    test "non-integer supplied" do
+      {status, _} = Board.create(4.0001)
+      assert status === :error
+      {status, _} = Board.create("hello")
+      assert status === :error
+      {status, _} = Board.create(:world)
+      assert status === :error
+    end
+
+    test "negative integer supplied" do
+      {status, _} = Board.create(-4)
+      assert status === :error
+    end
+
+    test "zero size supplied" do
+      {status, _} = Board.create(0)
+      assert status === :error
+    end
+end
 
   describe "when cell is retrieved" do
     test "it returns with correct coords", state do
-      {status, cell} = Board.get_cell(2, 3)
+      {status, cell} = Board.get_cell(state[:board], 2, 3)
       assert status === :ok
       assert cell.row === 2
       assert cell.col === 3
     end
 
     test "there is no result if no cell exists at that coordinate", state do
-      {status, _cell} = Board.get_cell(20, 3)
+      {status, _cell} = Board.get_cell(state[:board], 20, 3)
       assert status === :error
-      assert cell === "no cell exists"
     end
   end
 end
