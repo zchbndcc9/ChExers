@@ -19,7 +19,7 @@ defmodule Game do
   def new_game() do
     board =
       Board.create()
-      |> initialize()
+      |> (fn {:ok, board} -> initialize(board) end).()
 
     %Game{ board: board }
   end
