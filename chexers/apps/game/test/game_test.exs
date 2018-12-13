@@ -1,8 +1,8 @@
 defmodule GameTest do
   use ExUnit.Case
-  doctest Game
+  alias Game.Board
 
-  test "greets the world" do
-    assert Game.hello() == :world
+  describe "game creation when" do
+
   end
 end
