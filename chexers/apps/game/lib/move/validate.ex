@@ -1,4 +1,4 @@
-defmodule Game.Move.Validator do
+defmodule Game.Move.Validate do
   alias Game.Board
   alias Game.Board.Cell
 
