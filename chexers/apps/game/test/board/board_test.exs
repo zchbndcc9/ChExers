@@ -3,7 +3,7 @@ defmodule Game.BoardTest do
   alias Game.Board
 
   setup_all do
-    {:ok, board} = Board.create()
+    {_status, board} = Board.create()
     {:ok, board: board}
   end
   describe "when default board is created," do
@@ -23,7 +23,7 @@ defmodule Game.BoardTest do
 
   describe "when dimension is supplied to board," do
     setup do
-      {:ok, board} = Board.create(10)
+      {_status, board} = Board.create(10)
       {:ok, board: board}
     end
     test "the size is correct", context do
