@@ -9,7 +9,7 @@ defmodule Game.Board do
     end
   end
 
-  @spec create(integer()) :: list(Cell)
+  @spec create(integer()) :: {:ok, list(Cell)} | {:error, String}
   def create(size \\ 8)
   def create(size) when is_valid_size(size) do
     board =
@@ -24,6 +24,26 @@ defmodule Game.Board do
     {:error, "Must supply a positive integer for size"}
   end
 
+  def equal?(board1, board2) do
+    sort_board1 = Task.async(fn -> Enum.sort(board1, &(&1.row <= &2.row and &1.col <= &2.col)) end)
+    sort_board2 = Task.async(fn -> Enum.sort(board2, &(&1.row <= &2.row and &1.col <= &2.col)) end)
+
+    compare_boards(Task.await(sort_board1), Task.await(sort_board2))
+  end
+
+    defp compare_boards([], []), do: true
+    defp compare_boards([h | t1], [h | t2]), do: compare_boards(t1, t2)
+    defp compare_boards(_, _), do: false
+
+  @spec get_cell(list(Cell), integer(), integer()) :: {any(), any()}
+  def get_cell(board, row, col) do
+    board
+    |> Enum.find(fn cell -> cell.row === row and cell.col === col end)
+    |> format_return()
+  end
+
+  def format_return(nil), do: {:error, "No cell at these coordinates"}
+  def format_return(cell), do: {:ok, cell}
 
   defp create_row(cells, _row, -1) do
     cells
