@@ -1,6 +1,7 @@
 defmodule Game do
   alias Game.Board
   alias Game.Board.Cell
+  alias Game.Move.Validator
 
   use TypedStruct
 
@@ -12,7 +13,6 @@ defmodule Game do
     field :black_pieces, non_neg_integer, default: 12
     field :winner, :white | :black | nil, default: nil
     field :game_status, atom(), default: :initializing
-    field :move_status, atom(), default: nil
     field :current_turn, :white | :black | nil, default: nil
   end
 
@@ -21,21 +21,24 @@ defmodule Game do
       Board.create()
       |> (fn {:ok, board} -> initialize(board) end).()
 
-    %Game{ board: board }
+    {:ok, %Game{ board: board }}
   end
 
   # Guard to ensure that game is not altered once it has already been won
-  @spec move(Game.t(), atom(), coords(), coords()) :: Game.t()
+  @spec move(Game.t(), atom(), coords(), coords()) :: {atom(), Game.t()}
   def move(game = %Game{game_status: :won}, _player, _from, _to) do
-    game
+    {:ok, game}
   end
 
   def move(game = %Game{}, player, from, to) do
-    game
-    |> determine_valid_move(from, to)
-    |> move_piece(player, from, to)
-    |> update_game()
-    |> determine_game_status()
+    {status, game} =
+      game
+      |> Validator.validate(player, from, to)
+      |> move_piece(player, from, to)
+      |> update_game()
+      |> determine_game_status()
+
+    {status, game}
   end
 
   ## Helpers
@@ -76,47 +79,67 @@ defmodule Game do
     %Cell{cell | occupier: piece}
   end
 
-  defp determine_valid_move(game, from, to) do
-    game
-    |> check_same_location(from, to)
-    |> check_distance(from, to)
-    |> check_occupied(to)
+  defp move_piece({:ok, game}, player, from, to) do
+    # EXTRACT TO OWN FXN
+    from_cell_task = Task.async(fn -> Enum.find(game.board, fn cell -> cell.row === from.row and cell.col === from.col end) end)
+    to_cell_task = Task.async(fn -> Enum.find(game.board, fn cell -> cell.row === to.row and cell.col === to.col end) end)
+    filter_board_task = Task.async(fn ->
+      game.board
+      |> Enum.reject(fn cell -> cell.row === to.row and cell.col === to.col end)
+      |> Enum.reject(fn cell -> cell.row === to.row and cell.col === to.col end)
+    end)
+
+    from_cell = Task.await(from_cell_task)
+    to_cell = Task.await(to_cell_task)
+    filtered_board = Task.await(filter_board_task)
+
+    new_board =
+      [%Cell{ from_cell | occupier: nil} | [%Cell{to_cell | occupier: player} | filtered_board]]
+      |> List.flatten
+
+    {:ok, %Game{game | board: new_board}}
   end
 
-  defp check_same_location(game, from, to) do
-    case Map.equal?(from, to) do
-      false -> %Game{ game | move_status: :invalid }
-      true -> game
-    end
+  defp move_piece({:hop, game}, player, from, to) do
+    # DO WORK TO MOVE PIECE and alter game
+    from_cell_task = Task.async(fn -> Enum.find(game.board, fn cell -> Map.equal?(cell, from) end) end)
+    to_cell_task = Task.async(fn -> Enum.find(game.board, fn cell -> Map.equal?(cell, to) end) end)
+    filter_board_task = Task.async(fn ->
+      game.board
+      |> Enum.reject(fn cell -> Map.equal?(cell, from) end)
+      |> Enum.reject(fn cell -> Map.equal?(cell, to) end)
+    end)
+
+    from_cell = Task.await(from_cell_task)
+    to_cell = Task.await(to_cell_task)
+    filtered_board = Task.await(filter_board_task)
+
+    opponent = get_opponent(player)
+
+    {:ok, game}
   end
 
-  defp check_distance(game, from, to) do
-    game
+  defp move_piece({status, game}, _player, _from, _to), do: {status, game}
+
+  defp get_opponent(:white), do: :black
+  defp get_opponent(:black), do: :white
+
+  defp update_game({:ok, game}) do
+    {:ok, game}
   end
 
-  defp check_occupied(game, to) do
-    game
-  end
+  defp update_game({status, game}), do: {status, game}
 
-  defp move_piece(game = %Game{ move_status: :invalid }, _player, _from, _to) do
-    game
-  end
-
-  defp move_piece(game, player, from, to) do
-    game
-  end
-
-  defp update_game(game) do
-    game
-  end
 
   # I was torn on whether to pattern match or use cases, but I went with the
   # latter since I think it leads to clean, more concise code
-  defp determine_game_status(game) do
-    case game do
+  defp determine_game_status({status, game}) do
+    game = case game do
       %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, game_status: :won }
       %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, game_status: :won }
-      _ -> game
+      _ -> %Game{ game | game_status: :in_progress}
     end
+
+    {status, game}
   end
 end
