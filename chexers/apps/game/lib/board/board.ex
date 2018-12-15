@@ -1,28 +1,9 @@
 defmodule Game.Board do
   alias Game.Board.Cell
 
-  # Macro used in order to secure board creation function while keeping the
-  # guard nice and concise.
-  defmacro is_valid_size(size) do
-    quote do
-      is_integer(unquote(size)) and unquote(size) > 0
-    end
-  end
-
-  @spec create(integer()) :: {:ok, list(Cell)} | {:error, String}
-  def create(size \\ 8)
-  def create(size) when is_valid_size(size) do
-    board =
-      0..size-1
-      |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size-1) end) end)
-      |> Enum.map(fn task -> Task.await(task) end)
-      |> List.flatten
-    {:ok, board}
-  end
-
-  def create(_) do
-    {:error, "Must supply a positive integer for size"}
-  end
+  defdelegate create(size), to: Game.Board.Create
+  defdelegate move(board, player, from, to), to: Game.Board.Move
+  defdelegate draw(board), to: Game.Board.Draw
 
   def equal?(board1, board2) do
     sort_board1 = Task.async(fn -> Enum.sort(board1, &(&1.row <= &2.row and &1.col <= &2.col)) end)
@@ -42,22 +23,11 @@ defmodule Game.Board do
     |> format_return()
   end
 
-  def format_return(nil), do: {:error, "No cell at these coordinates"}
-  def format_return(cell), do: {:ok, cell}
+  defp format_return(nil), do: {:error, "No cell at these coordinates"}
+  defp format_return(cell), do: {:ok, cell}
 
-  defp create_row(cells, _row, -1) do
-    cells
-  end
-
-  defp create_row(cells, row, col) do
-    [%Cell{row: row, col: col, movable?: movable?(row, col)} | cells]
-    |> create_row(row, col-1)
-  end
-
-  defp movable?(row, col) do
-    case {rem(row, 2), rem(col, 2)} do
-      {same, same} -> true
-      {_, _} -> false
-    end
+  def get_hopped_cell(board, from, to) do
+    %{row: row, col: col} = get_middle_coords(from, to)
+    {_status, cell} = get_cell(board, row, col)
   end
 end
