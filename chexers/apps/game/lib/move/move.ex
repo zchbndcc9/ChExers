@@ -6,9 +6,9 @@ defmodule Game.Move do
   @type player    :: :white | :black
   @type coords    ::  %{row: integer, col: integer}
   @type move_flag ::  :ok | :invalid_move | :wrong_piece |
-                    :invalid_coord | :no_piece |
-                    :possible_hop | :invalid_hop | :hop |
-                    :blocked | :same_location
+                      :invalid_coord | :no_piece |
+                      :possible_hop | :invalid_hop | :hop |
+                      :blocked | :same_location
 
   # Guard to ensure that game is not altered once it has already been won
   @spec move(%Game{}, player, coords, coords) :: {move_flag, %Game{}}
@@ -36,18 +36,23 @@ defmodule Game.Move do
   end
 
   defp move_piece({:hop, game}, player, from, to) do
-    
+   piece_to_remove = %Cell{occupier: opponent} = Board.get_hopped_cell(game.board, from, to)
+
     new_board =
       game.board
       |> Board.move(player, from, to)
-      |>
+      |> Board.remove(piece_to_remove)
 
-
-    {:ok, %Game{ game | board: new_board }}
+    %{white: w, black: b} = game.game_pieces
+    updated_pieces =
+      case opponent do
+        :white -> %{white: w-1, black: b}
+        :black -> %{white: w, black: b-1}
+      end
+    {:ok, %Game{ game | game_pieces: updated_pieces, board: new_board }}
   end
 
   defp move_piece({status, game}, _player, _from, _to), do: {status, game}
-
 
   defp update_game({:ok, game}) do
     {:ok, game}
@@ -55,13 +60,12 @@ defmodule Game.Move do
 
   defp update_game({status, game}), do: {status, game}
 
-
   # I was torn on whether to pattern match or use cases, but I went with the
   # latter since I think it leads to clean, more concise code
   defp determine_game_status({status, game}) do
     game = case game do
-      %Game{ white_pieces: 0 } -> %Game{ game | winner: :black, game_status: :won }
-      %Game{ black_pieces: 0 } -> %Game{ game | winner: :white, game_status: :won }
+      %Game{ game_pieces: %{white: 0} } -> %Game{ game | winner: :black, game_status: :won }
+      %Game{ game_pieces: %{black: 0} } -> %Game{ game | winner: :white, game_status: :won }
       _ -> %Game{ game | game_status: :in_progress}
     end
 
