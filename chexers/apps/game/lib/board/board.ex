@@ -31,11 +31,11 @@ defmodule Game.Board do
     compare_boards(Task.await(sort_board1), Task.await(sort_board2))
   end
 
-    defp compare_boards([], []), do: true
-    defp compare_boards([h | t1], [h | t2]), do: compare_boards(t1, t2)
-    defp compare_boards(_, _), do: false
+  defp compare_boards([], []), do: true
+  defp compare_boards([h | t1], [h | t2]), do: compare_boards(t1, t2)
+  defp compare_boards(_, _), do: false
 
-  @spec get_cell(list(Cell), integer(), integer()) :: {any(), any()}
+  @spec get_cell(list(Cell), integer, integer) :: {:error, String.t()} | {:ok, %Cell{}}
   def get_cell(board, row, col) do
     board
     |> Enum.find(fn cell -> cell.row === row and cell.col === col end)
