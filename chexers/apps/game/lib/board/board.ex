@@ -21,11 +21,11 @@ defmodule Game.Board do
   def get_cell(board, row, col) do
     board
     |> Enum.find(fn cell -> cell.row === row and cell.col === col end)
-    |> format_return()
+    |> format_return_cell()
   end
 
-  defp format_return(nil), do: {:error, "No cell at these coordinates"}
-  defp format_return(cell), do: {:ok, cell}
+  defp format_return_cell(nil), do: {:error, "No cell at these coordinates"}
+  defp format_return_cell(cell), do: {:ok, cell}
 
   def get_hopped_cell(board, from, to) do
     %{row: row, col: col} = Game.Util.get_middle_coords(from, to)
