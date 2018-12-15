@@ -115,7 +115,7 @@ defmodule Game.Move.Validate do
 
   @spec check_valid_hop({move_flag, %Game{}}, player, coords, coords) :: {move_flag, %Game{}}
   def check_valid_hop({:possible_hop, game}, player, from, to) do
-    %{row: row, col: col} = get_middle_coords(from, to)
+    %{row: row, col: col} = Game.Util.get_middle_coords(from, to)
     {_status, %Cell{occupier: occupier}} = Board.get_cell(game.board, row, col)
 
     status = case occupier do
@@ -127,22 +127,6 @@ defmodule Game.Move.Validate do
   end
 
   def check_valid_hop({status, game}, _player,  _from, _to), do: {status, game}
-
-  @spec get_middle_coords(coords, coords) :: coords
-  def get_middle_coords(from, to) do
-    case get_larger_row(from, to) do
-      %{row: same, col: same} -> %{row: same-1, col: same-1}
-      %{row: row, col: col}   -> %{row: row-1, col: col+1}
-    end
-  end
-
-  @spec get_larger_row(coords, coords) :: coords
-  def get_larger_row(cell1 = %{row: row1}, cell2 = %{row: row2}) do
-    case row1 > row2 do
-      true -> cell1
-      false -> cell2
-    end
-  end
 
   @spec check_hopped_cell(player, player) :: :hop | :invalid_hop
   def check_hopped_cell(player, player),      do: :invalid_hop
