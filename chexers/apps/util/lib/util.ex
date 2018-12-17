@@ -1,5 +1,4 @@
-
-defmodule Game.Util do
+defmodule Util do
   @type coords :: %{row: integer, col: integer}
 
   @spec get_middle_coords(coords, coords) :: coords

@@ -1,6 +1,5 @@
-defmodule Game.BoardTest do
+defmodule BoardTest do
   use ExUnit.Case
-  alias Game.Board
 
   setup_all do
     {_status, board} = Board.create()

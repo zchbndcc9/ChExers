@@ -1,4 +1,4 @@
-defmodule Game.Board.Cell do
+defmodule Board.Cell do
   use TypedStruct
 
   # utilizing typedstuct system in order to prevent

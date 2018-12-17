@@ -1,9 +1,9 @@
-defmodule Game.MixProject do
+defmodule Board.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :game,
+      app: :board,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -15,17 +15,17 @@ defmodule Game.MixProject do
     ]
   end
 
+  # Run "mix help compile.app" to learn about applications.
   def application do
     [
       extra_applications: [:logger]
     ]
   end
 
+  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:typed_struct, "~> 0.1.4"},
-      {:player, in_umbrella: true},
-      {:board, in_umbrella: true},
       {:util, in_umbrella: true}
     ]
   end

@@ -1,10 +1,10 @@
-defmodule Game.Board do
-  alias Game.Board.Cell
+defmodule Board do
+  alias Board.Cell
 
-  defdelegate create(size \\ 8), to: Game.Board.Create
-  defdelegate move(board, player, from, to), to: Game.Board.Move
-  defdelegate remove(board, piece), to: Game.Board.Move
-  defdelegate draw(board), to: Game.Board.Draw
+  defdelegate create(size \\ 8), to: Board.Create
+  defdelegate move(board, player, from, to), to: Board.Move
+  defdelegate remove(board, piece), to: Board.Move
+  defdelegate draw(board), to: Board.Draw
 
   def equal?(board1, board2) do
     sort_board1 = Task.async(fn -> Enum.sort(board1, &(&1.row <= &2.row and &1.col <= &2.col)) end)
@@ -28,7 +28,7 @@ defmodule Game.Board do
   defp format_return_cell(cell), do: {:ok, cell}
 
   def get_hopped_cell(board, from, to) do
-    %{row: row, col: col} = Game.Util.get_middle_coords(from, to)
+    %{row: row, col: col} = Util.get_middle_coords(from, to)
     {_status, cell} = get_cell(board, row, col)
 
     cell

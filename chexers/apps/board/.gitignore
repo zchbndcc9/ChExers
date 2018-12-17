@@ -19,4 +19,8 @@ erl_crash.dump
 # Also ignore archive artifacts (built via "mix archive.build").
 *.ez
 
-/apps/*/.elixir_ls/
+# Ignore package tarball (built via "mix hex.build").
+board-*.tar
+
+/.elixir_ls/
+
