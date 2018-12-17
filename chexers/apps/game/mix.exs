@@ -19,7 +19,8 @@ defmodule Game.MixProject do
 
   defp deps do
     [
-      {:typed_struct, "~> 0.1.4"}
+      {:typed_struct, "~> 0.1.4"},
+      {:printex, "~> 0.1.3"}
     ]
   end
 end

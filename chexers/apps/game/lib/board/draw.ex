@@ -25,8 +25,24 @@ defmodule Game.Board.Draw do
     draw_rows(rows, num+1)
   end
 
-  defp draw_cell(%Cell{occupier: :white}),  do: IO.write "| O "
-  defp draw_cell(%Cell{occupier: :black}),  do: IO.write "| 0 "
-  defp draw_cell(%Cell{occupier: nil}),     do: IO.write "|   "
+  defp draw_cell(%Cell{occupier: :white, movable?: true}) do
+    IO.write "|"
+    Printex.color_print " O" , :white_on_light_white
+  end
+
+  defp draw_cell(%Cell{occupier: :white, movable?: false}) do
+    IO.write "|"
+    Printex.color_print " O ", :white_on_light_blue
+  end
+
+  defp draw_cell(%Cell{occupier: :black, movable?: true}) do
+    IO.write "|"
+    Printex.color_print " 0 ", :black_on_light_white
+  end
+
+  defp draw_cell(%Cell{occupier: :black, movable?: false}) do
+    IO.write "|"
+    Printex.color_print " 0 ", :black_on_light_blue
+  end
 
 end
