@@ -1,4 +1,6 @@
 defmodule Game.Play do
+  alias Game.Util
+  
   def play(%Game{board: board, game_status: :won, winner: player}) do
     Board.draw(board)
     IO.puts "Congrats to #{player} for winning!"
@@ -16,7 +18,7 @@ defmodule Game.Play do
 
     case Game.Move.move(game, player, from, to) do
       {:ok, game} ->
-        next_player = get_opponent(player)
+        next_player = Util.get_opponent(player)
         play(%Game{ game | current_turn: next_player })
       {status, game} ->
         # Print out reason
@@ -36,8 +38,4 @@ defmodule Game.Play do
     IO.puts "Current turn: #{player}"
     IO.puts "Black: #{black} | White: #{white}"
   end
-
-  @spec get_opponent(:black | :white) :: :black | :white
-  def get_opponent(:white), do: :black
-  def get_opponent(:black), do: :white
 end

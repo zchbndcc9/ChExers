@@ -1,5 +1,6 @@
 defmodule Game.Move do
   alias Board.Cell
+  alias Game.Util
   alias Game.Move.Validate
 
   @type player    :: :white | :black
@@ -22,6 +23,7 @@ defmodule Game.Move do
       |> move_piece(player, from, to)
       |> update_game()
       |> determine_game_status()
+      |> change_player_turn()
 
     {status, game}
   end
@@ -69,6 +71,17 @@ defmodule Game.Move do
       _ -> %Game{ game | game_status: :in_progress}
     end
 
+    {status, game}
+  end
+
+  defp change_player_turn({:ok, game = %Game{ current_turn: player }}) do
+    next_player = Util.get_opponent(player)
+
+    {:ok, %Game{ game | current_turn: next_player}}
+    end
+  end
+
+  defp change_player_turn({status, game}) do
     {status, game}
   end
 end
