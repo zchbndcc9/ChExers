@@ -1,3 +1,4 @@
 %{
+  "anonymous_name_generator": {:hex, :anonymous_name_generator, "0.1.3", "0515a49f75c1c98644618eb507b92099459905a87e98600ac821b5cf042c9425", [:mix], [], "hexpm"},
   "typed_struct": {:hex, :typed_struct, "0.1.4", "25971ce73a8b336dedf2f80e4dafaab111af127ba4773955b66805c89e197f6a", [:mix], [], "hexpm"},
 }

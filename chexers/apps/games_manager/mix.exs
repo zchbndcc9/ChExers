@@ -26,7 +26,8 @@ defmodule GamesManager.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:game, in_umbrella: true}
+      {:game, in_umbrella: true},
+      {:anonymous_name_generator, "~> 0.1"}
     ]
   end
 end
