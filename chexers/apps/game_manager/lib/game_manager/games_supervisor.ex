@@ -12,7 +12,10 @@ defmodule GameManager.GamesSupervisor do
   end
 
   def create_game() do
-    child_spec = {Games, strategy: :one_for_one}
-    DynamicSupervisor.start_child(__MODULE__, child_spec)
+    name = AnonymousNameGenerator.generate_random()
+    child_spec = {Games, name}
+    {status, _pid} = DynamicSupervisor.start_child(__MODULE__, child_spec)
+
+    {status, name}
   end
 end

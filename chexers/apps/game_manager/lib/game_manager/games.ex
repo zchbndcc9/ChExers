@@ -4,8 +4,8 @@ defmodule GameManager.Games do
   This module servers as the GenServer wrapper to the Game module
   """
 
-  def start_link(_) do
-    GenServer.start_link(__MODULE__, [])
+  def start_link(name) do
+    GenServer.start_link(__MODULE__, name, name: via_tuple(name))
   end
 
   def init(_) do
@@ -13,12 +13,14 @@ defmodule GameManager.Games do
     {:ok, game}
   end
 
-  def move(pid, player, from, to) do
-    GenServer.call(pid, {:move, player, from, to})
+  defp via_tuple(name), do: {:via, Registry, {:game_registry, name}}
+
+  def move(name, player, from, to) do
+    GenServer.call(via_tuple(name), {:move, player, from, to})
   end
 
-  def get_game(pid) do
-    GenServer.call(pid, {:get})
+  def get_game(name) do
+    GenServer.call(via_tuple(name), {:get})
   end
 
   def handle_call({:move, player, from, to}, _pid, game) do

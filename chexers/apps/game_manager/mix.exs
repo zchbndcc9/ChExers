@@ -1,9 +1,9 @@
-defmodule GamesManager.MixProject do
+defmodule GameManager.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :games_manager,
+      app: :game_manager,
       version: "0.1.0",
       build_path: "../../_build",
       config_path: "../../config/config.exs",
@@ -19,7 +19,7 @@ defmodule GamesManager.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {GamesManager.Application, []}
+      mod: {GameManager.Application, []}
     ]
   end
 

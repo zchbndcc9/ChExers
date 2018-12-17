@@ -1,4 +1,4 @@
-# GamesManager
+# GameManager
 
 **TODO: Add description**
 
@@ -10,7 +10,7 @@ by adding `games_manager` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:games_manager, "~> 0.1.0"}
+    {:game_manager, "~> 0.1.0"}
   ]
 end
 ```
