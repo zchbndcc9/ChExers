@@ -78,7 +78,6 @@ defmodule Game.Move do
     next_player = Util.get_opponent(player)
 
     {:ok, %Game{ game | current_turn: next_player}}
-    end
   end
 
   defp change_player_turn({status, game}) do

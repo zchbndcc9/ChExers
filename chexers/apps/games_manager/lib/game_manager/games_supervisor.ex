@@ -1,5 +1,6 @@
-defmodule GamesManager.Supervisor do
+defmodule GameManager.GamesSupervisor do
   use DynamicSupervisor
+  alias GameManager.Games
 
   def start_link(arg) do
     DynamicSupervisor.start_link(__MODULE__, arg, name: __MODULE__)
@@ -11,7 +12,7 @@ defmodule GamesManager.Supervisor do
   end
 
   def create_game() do
-    child_spec = {Games}
+    child_spec = {Games, strategy: :one_for_one}
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 end
