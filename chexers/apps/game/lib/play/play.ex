@@ -1,11 +1,11 @@
 defmodule Game.Play do
   def play(%Game{board: board, game_status: :won, winner: player}) do
-    Game.Board.draw(board)
+    Board.draw(board)
     IO.puts "Congrats to #{player} for winning!"
   end
 
   def play(game = %Game{current_turn: player, board: board}) do
-    Game.Board.draw(board)
+    Board.draw(board)
 
     print_stats(game)
 

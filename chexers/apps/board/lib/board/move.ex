@@ -1,5 +1,5 @@
-defmodule Game.Board.Move do
-  alias Game.Board.Cell
+defmodule Board.Move do
+  alias Board.Cell
 
   def move(board, player, from, to) do
     from_cell_task = Task.async(fn -> Enum.find(board, fn cell -> cell.row === from.row and cell.col === from.col end) end)

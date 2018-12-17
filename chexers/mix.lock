@@ -1,4 +1,3 @@
 %{
-  "printex": {:hex, :printex, "0.1.3", "80b606276c648d59c5023572641747a4f985b4048894acf351b6cc9e8193885a", [:mix], [], "hexpm"},
   "typed_struct": {:hex, :typed_struct, "0.1.4", "25971ce73a8b336dedf2f80e4dafaab111af127ba4773955b66805c89e197f6a", [:mix], [], "hexpm"},
 }

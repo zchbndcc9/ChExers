@@ -1,6 +1,5 @@
 defmodule Game.Create do
-  alias Game.Board
-  alias Game.Board.Cell
+  alias Board.Cell
 
   def new_game() do
     board =

@@ -1,7 +1,6 @@
 defmodule GameTest do
   use ExUnit.Case
-  alias Game.Board
-  alias Game.Board.Cell
+  alias Board.Cell
 
   setup_all do
     {_status, game} = Game.new_game()
@@ -10,8 +9,8 @@ defmodule GameTest do
 
   describe "when default game is created" do
     test "it contains the correct number of player pieces", state do
-      assert state[:game].white_pieces === 12
-      assert state[:game].black_pieces === 12
+      assert state[:game].game_pieces.white === 12
+      assert state[:game].game_pieces.black === 12
     end
   end
 

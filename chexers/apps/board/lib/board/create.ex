@@ -1,5 +1,5 @@
-defmodule Game.Board.Create do
-  alias Game.Board.Cell
+defmodule Board.Create do
+  alias Board.Cell
   # Macro used in order to secure board creation function while keeping the
   # guard nice and concise.
   defmacro is_valid_size(size) do

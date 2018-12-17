@@ -1,6 +1,5 @@
 defmodule Game.Move.Validate do
-  alias Game.Board
-  alias Game.Board.Cell
+  alias Board.Cell
 
   @type player    ::  :white | :black
   @type coords    ::  %{row: integer, col: integer}
@@ -115,7 +114,7 @@ defmodule Game.Move.Validate do
 
   @spec check_valid_hop({move_flag, %Game{}}, player, coords, coords) :: {move_flag, %Game{}}
   def check_valid_hop({:possible_hop, game}, player, from, to) do
-    %{row: row, col: col} = Game.Util.get_middle_coords(from, to)
+    %{row: row, col: col} = Util.get_middle_coords(from, to)
     {_status, %Cell{occupier: occupier}} = Board.get_cell(game.board, row, col)
 
     status = case occupier do

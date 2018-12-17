@@ -1,6 +1,5 @@
 defmodule Game.Move do
-  alias Game.Board
-  alias Game.Board.Cell
+  alias Board.Cell
   alias Game.Move.Validate
 
   @type player    :: :white | :black

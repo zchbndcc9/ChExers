@@ -1,5 +1,5 @@
-defmodule Game.Board.Draw do
-  alias Game.Board.Cell
+defmodule Board.Draw do
+  alias Board.Cell
 
   def draw(board) do
     IO.puts("     0   1   2   3   4   5   6   7")

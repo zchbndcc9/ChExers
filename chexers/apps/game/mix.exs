@@ -24,7 +24,9 @@ defmodule Game.MixProject do
   defp deps do
     [
       {:typed_struct, "~> 0.1.4"},
-      {:player, in_umbrella: true}
+      {:player, in_umbrella: true},
+      {:board, in_umbrella: true},
+      {:util, in_umbrella: true}
     ]
   end
 end
