@@ -15,8 +15,8 @@ defmodule GameManager.Games do
 
   defp via_tuple(name), do: {:via, Registry, {:game_registry, name}}
 
-  def move(name, player, from, to) do
-    GenServer.call(via_tuple(name), {:move, player, from, to})
+  def move(game_name, player, from, to) do
+    GenServer.call(via_tuple(game_name), {:move, player, from, to})
   end
 
   def get_game(name) do

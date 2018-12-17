@@ -18,4 +18,13 @@ defmodule GameManager.GamesSupervisor do
 
     {status, name}
   end
+
+  def delete_game(name) do
+    case Registry.lookup(:game_registry, name) do
+      [] -> {:error, "Game does not exist"}
+      [{pid, _name}] ->
+        DynamicSupervisor.terminate_child(__MODULE__, pid)
+        {:ok, "Game deleted"}
+    end
+  end
 end
