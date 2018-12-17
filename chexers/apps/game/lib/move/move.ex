@@ -45,6 +45,7 @@ defmodule Game.Move do
 
     %{white: w, black: b} = game.game_pieces
     updated_pieces =
+      #TO DO extract to own function
       case opponent do
         :white -> %{white: w-1, black: b}
         :black -> %{white: w, black: b-1}
