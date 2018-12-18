@@ -1,5 +1,6 @@
 defmodule ServerWeb.GameView do
   use ServerWeb, :view
+
   def render("show.json", %{"game" => game}) do
     %{
       board: Enum.map(game.board, fn cell -> ServerWeb.CellView.render("show.json", %{"cell" => cell}) end),
@@ -7,6 +8,12 @@ defmodule ServerWeb.GameView do
       winner: game.winner,
       game_status: game.game_status,
       current_turn: game.current_turn
+    }
+  end
+
+  def render("name.json", %{"name" => game_name}) do
+    %{
+      name: game_name
     }
   end
 end

@@ -29,6 +29,8 @@ defmodule ServerWeb.Endpoint do
     key: "_server_key",
     signing_salt: "PQc8v6+a"
 
+  plug CORSPlug
+
   plug ServerWeb.Router
 
   @doc """

@@ -1,7 +1,7 @@
 defmodule ServerWeb.GameChannel do
   use Phoenix.Channel
 
-  def join("game:lobby", _payload, socket) do
+  def join("game" <> game_id, _payload, socket) do
     {:ok, socket}
   end
 

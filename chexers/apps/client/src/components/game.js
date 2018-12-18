@@ -1,5 +1,6 @@
 import { h, Component } from 'preact'
 import { Socket } from 'phoenix'
+import Match from 'preact-router/match'
 import Board from './board'
 import Chat from './chat'
 
@@ -10,11 +11,13 @@ export default class Game extends Component {
       messages: [],
       game: {}
     }
+
     this.sendMsg = this.sendMsg.bind(this)
+    this.id = props.id
 
     let socket = new Socket("ws://localhost:4000/socket")
     socket.connect()
-    this.channel = socket.channel("game:lobby", {})
+    this.channel = socket.channel(`game:${this.id}`, {})
   }
 
   componentWillMount() {

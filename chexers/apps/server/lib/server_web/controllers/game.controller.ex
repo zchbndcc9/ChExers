@@ -5,7 +5,7 @@ defmodule ServerWeb.GameController do
     {_status, game_name} = GameManager.create_game()
 
     conn
-    |> send_resp(200, "{\"game\" => \"#{game_name}\"}")
+    |> render(ServerWeb.GameView, "name.json", %{"name" => game_name})
   end
 
   def show(conn, %{"id" => game_id}) do
