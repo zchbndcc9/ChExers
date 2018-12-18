@@ -5,7 +5,7 @@ defmodule Server.Application do
     import Supervisor.Spec
 
     children = [
-      supervisor(Server.Repo, []),
+      # supervisor(Server.Repo, []),
       supervisor(ServerWeb.Endpoint, []),
     ]
 
