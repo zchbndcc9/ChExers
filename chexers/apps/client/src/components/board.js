@@ -1,6 +1,5 @@
 import preact from 'preact'
 import Row from './row' 
-import { getCurrentUrl } from 'preact-router';
 
 const board = {
   display: "inline-block"

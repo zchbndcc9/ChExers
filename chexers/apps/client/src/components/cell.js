@@ -2,8 +2,8 @@ import preact from 'preact'
 import Radium from 'radium'
 
 const cell = {
-  width: "3em",
-  height: "3em",
+  width: "3.5em",
+  height: "3.5em",
   border: "1px black solid",
   ":hover": {
     cursor: "pointer"
