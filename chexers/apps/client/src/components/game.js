@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 import { Socket } from 'phoenix'
-import Match from 'preact-router/match'
+import axios from "axios"
 import Board from './board'
 import Chat from './chat'
 
@@ -20,6 +20,14 @@ export default class Game extends Component {
     this.channel = socket.channel(`game:${this.id}`, {})
   }
 
+  componentDidMount() {
+    axios.get(`http://localhost:4000/api/game/${this.id}`).then(({data}) => {
+      this.setState({
+        game: data
+      })
+    })
+  }
+
   componentWillMount() {
     this.channel.join()
       .receive("ok", response => { console.log("Joined successfully", response) })
@@ -30,7 +38,9 @@ export default class Game extends Component {
       }))
     })
 
-    // this.channel.on("move", ())
+    this.channel.on("move", () => {
+
+    })
   }
 
   sendMsg(event) {
@@ -40,10 +50,15 @@ export default class Game extends Component {
     this.channel.push("message", message)
   }
 
+  movePiece(from, to) {
+    
+  }
+
   render() {
+    let board = this.state.game.board
     return(
       <div class="game d-flex justify-content-around align-items-center mt-4">
-        <Board size={8} />
+        <Board size={8} board={this.state.game.board} />
         <Chat messages={this.state.messages} send={this.sendMsg}/>
       </div>
     )

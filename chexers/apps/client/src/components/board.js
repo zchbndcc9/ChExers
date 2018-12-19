@@ -1,17 +1,15 @@
 import preact from 'preact'
-import Row from './row' 
+import Cell from './cell'
+import cell from './cell';
 
 const board = {
   display: "inline-block"
 }
 
 class Board extends preact.Component {
-
   constructor(props) {
     super(props)
     this.state = {
-      size: props.size,
-      rows: [],
       currentPicked: {
         row: 0,
         col: 0
@@ -20,14 +18,12 @@ class Board extends preact.Component {
     this.selectCell = this.selectCell.bind(this)
   }
 
-  componentDidMount() {
-    let newRows = []
-    for(let i = 0; i < this.state.size; i++) {
-      newRows.push(<Row key={i} num={i} size={this.state.size} select={(row, col) => this.selectCell(row, col)} />);
-    }
-    this.setState({
-      rows: newRows
-    })
+  drawBoard() {
+    if (this.props.board === undefined) return (<div></div>)
+
+    
+    let cells = this.props.board.map(({occupier, row, col}) => <Cell odd={row%2 === col%2} piece={occupier}></Cell>)
+
   }
 
   selectCell(row, col) {
@@ -40,9 +36,10 @@ class Board extends preact.Component {
   }
 
   render() {
+    let gameBoard = this.drawBoard()
     return (
       <div className="board" style={board}>
-        {this.state.rows}
+        {gameBoard}
       </div>
     )
   }
