@@ -1,11 +1,10 @@
-defmodule ServerWeb.CellView do
+defmodule ServerWeb.PieceView do
   use ServerWeb, :view
 
-  def render("show.json", %{"cell" => cell}) do
+  def render("show.json", %{"piece" => cell}) do
     %{
       row: cell.row,
       col: cell.col,
-      movable?: cell.movable?,
       occupier: cell.occupier
     }
   end
