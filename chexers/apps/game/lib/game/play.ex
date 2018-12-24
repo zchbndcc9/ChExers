@@ -1,4 +1,5 @@
 defmodule Game.Play do
+  alias Game.Board
   alias Game.Util
 
   def play(%Game{board: board, game_status: :won, winner: player}) do

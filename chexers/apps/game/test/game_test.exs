@@ -1,6 +1,7 @@
 defmodule GameTest do
   use ExUnit.Case
-  alias Board.Cell
+  alias Game.Board
+  alias Game.Board.Cell
 
   setup_all do
     {_status, game} = Game.new_game()
