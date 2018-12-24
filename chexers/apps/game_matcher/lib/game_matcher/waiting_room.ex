@@ -1,13 +1,14 @@
 defmodule GameMatcher.WaitingRoom do
   use GenServer
+  alias GameMatcher.WaitingRoom.Impl
   @me GameMatcher.WaitingRoom.API
 
   def start_link(_arg) do
-    GenServer.start_link(@me, [], name: @me)
+    GenServer.start_link(@me, %Impl{}, name: @me)
   end
 
-  def init(_args) do
-    {:ok, nil}
+  def init(args) do
+    {:ok, args}
   end
 
   def put_in_room(player, game_name) do
