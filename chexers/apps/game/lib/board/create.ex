@@ -1,5 +1,5 @@
 defmodule Game.Board.Create do
-  alias Board.Cell
+  alias Game.Board.Cell
   # Macro used in order to secure board creation function while keeping the
   # guard nice and concise.
   defmacro is_valid_size(size) do
@@ -8,7 +8,8 @@ defmodule Game.Board.Create do
     end
   end
   @spec create() :: {:ok, list(Cell)} | {:error, String}
-  def create(size \\ 8) when is_integer(size) do
+  def create(size \\ 8)
+  def create(size) when is_valid_size(size) do
     board =
       0..size-1
       |> Enum.map(fn row -> Task.async(fn -> create_row([], row, size-1) end) end)
