@@ -1,6 +1,6 @@
-defmodule Board.CellTest do
+defmodule Game.Board.CellTest do
   use ExUnit.Case
-  alias Board.Cell
+  alias Game.Board.Cell
 
   describe "cell creation when" do
     test "row and col provided" do

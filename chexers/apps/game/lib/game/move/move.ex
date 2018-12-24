@@ -1,5 +1,6 @@
 defmodule Game.Move do
-  alias Board.Cell
+  alias Game.Board
+  alias Game.Board.Cell
   alias Game.Util
   alias Game.Move.Validate
 

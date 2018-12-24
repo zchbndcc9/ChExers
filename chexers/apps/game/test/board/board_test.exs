@@ -1,5 +1,6 @@
-defmodule BoardTest do
+defmodule Game.BoardTest do
   use ExUnit.Case
+  alias Game.Board
 
   setup_all do
     {_status, board} = Board.create()
@@ -17,25 +18,6 @@ defmodule BoardTest do
         |> Enum.filter(fn cell -> cell.movable? === true end)
         |> Enum.count()
       assert num_spaces === 32
-    end
-  end
-
-  describe "when dimension is supplied to board," do
-    setup do
-      {_status, board} = Board.create(10)
-      {:ok, board: board}
-    end
-    test "the size is correct", context do
-      size = context[:board] |> Enum.count()
-      assert size === 100
-    end
-
-    test "it contains the correct number of movable spaces", context do
-      num_spaces =
-         context[:board]
-         |> Enum.filter(fn cell -> cell.movable? === true end)
-         |> Enum.count()
-      assert num_spaces === 50
     end
   end
 
@@ -58,7 +40,7 @@ defmodule BoardTest do
       {status, _} = Board.create(0)
       assert status === :error
     end
-end
+  end
 
   describe "when cell is retrieved" do
     test "it returns with correct coords", state do

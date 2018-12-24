@@ -1,5 +1,6 @@
 defmodule Game.Move.Validate do
-  alias Board.Cell
+  alias Game.Board
+  alias Game.Board.Cell
 
   @type player    ::  :white | :black
   @type coords    ::  %{row: integer, col: integer}

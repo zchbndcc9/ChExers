@@ -1,5 +1,6 @@
-defmodule Board do
-  alias Board.Cell
+defmodule Game.Board do
+  alias Game.Board
+  alias Game.Board.Cell
 
   defdelegate create(size \\ 8), to: Board.Create
   defdelegate move(board, player, from, to), to: Board.Move
